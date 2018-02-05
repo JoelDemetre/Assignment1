@@ -129,6 +129,8 @@ x = zeros(3,NumParticles);
 y = zeros(2,NumParticles);
 temp = zeros(2, NumParticles);
 scatTime = zeros(1,NumParticles);
+endtime = Timestep*50000;
+graphfor = Timestep*1000;
 
 %Start the random distribution in x position
 x(1,:) =  rand(1,NumParticles);
@@ -183,7 +185,7 @@ for i = 0:Timestep:endtime
        end
     x(1,kt) = x(1,kt) + x(2,kt).*Timestep;
     y(1,kt) = y(1,kt) + y(2,kt).*Timestep;
-    if kt <= PlotHowMany
+    if kt <= PlotHowMany && i < graphfor
         plot([xprev(1,kt), x(1,kt)], [yprev(1,kt), y(1,kt)],'color', mycolors(kt,:) );
         hold on;
     end
@@ -251,10 +253,11 @@ grid on;
 hold off;
 
 %%
-% The graph can't show the mean free path going to 37.4 nm and the scattering
-% time appraoaching 0.2ps until much later as the timestep in on the order
-% of 10 000 times smaller. However, it does occur and the plots linear
-% slope eventually curves to an asymptote of 0.2ps and 37.4 nm.
+% The graph shows the mean free path stabilizing around 36 to 38 nm and with a calculated
+% mean free path of 37.4 nm the simulation and calculated agree. The scattering
+% time approaches 0.2 ps and stabilizies around the given time between
+% collisions of 0.2 ps. Both these plots become asymptotic at the given and calculated
+% values for mean free path and time between collisions.
 
 
 
@@ -269,7 +272,7 @@ yboxLim2 = [.6*(ylimits(2)-ylimits(1)), ylimits(2)];
 xbox = xboxLim([1 1 2 2 1]);
 ybox1 = yboxLim1([1 2 2 1 1]);
 ybox2 = yboxLim2([1 2 2 1 1]);
-
+endtime = Timestep*2000;
 xprev = zeros(1, NumParticles);
 yprev = zeros(1, NumParticles);
 x = zeros(3,NumParticles);
