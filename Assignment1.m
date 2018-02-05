@@ -21,7 +21,7 @@ vx = (Kbolt*T/mn)^.5;
 vy = (Kbolt*T/mn)^.5;
 vth = (vx^2 + vy^2)^.5;
 %% 
-% $$v_{th}$ is then equal to 187 000 m/s
+% $$v_{th}$ is then equal to 166 000 m/s
 
 %%       B) Mean Free Path
 % The mean free path can be determined from the velocity multiplied by the time between collisions
@@ -129,7 +129,7 @@ x = zeros(3,NumParticles);
 y = zeros(2,NumParticles);
 temp = zeros(2, NumParticles);
 scatTime = zeros(1,NumParticles);
-endtime = Timestep*50000;
+endtime = Timestep*30000;
 graphfor = Timestep*1000;
 
 %Start the random distribution in x position
@@ -140,14 +140,16 @@ y(1,:) =  ylimits(1) + y(1,:).*(ylimits(2) - ylimits(1));
 
 %%      A) Maxwell Boltzmann Distributed Velocity
 % The Maxwell Boltzmann Distribution can be taken as a Gaussian Distribution
-% with a standard deviation of $$\sqrt{\frac{m_n}{KT}}$
+% with a standard deviation of $$\sqrt{\frac{KT}{m_n}}$
 %Assign the random velocity and random angle
-temp(1,:) = (normrnd(vx, sqrt(mn/(Kbolt*T)), 1, NumParticles).^2 + normrnd(vx, sqrt(mn/(Kbolt*T)), 1, NumParticles).^2).^.5;
+
+temp(1,:) = ((sqrt(Kbolt*T/mn)*randn(1, NumParticles)).^2 + (sqrt(Kbolt*T/mn)*randn(1, NumParticles)).^2).^.5;
 x(3,:) = rand(1, NumParticles)*2*pi;
 x(2,:) = temp(1,:).*cos(x(3,:));
 y(2,:) = temp(1,:).*sin(x(3,:));
 figure(2);
 hist(sqrt(x(2,:).^2 + y(2,:).^2),20);
+
 title('Electron Velocity Distribution');
 xlabel('velocity (m/s)');
 ylabel('Frequency in Bins');
@@ -191,7 +193,7 @@ for i = 0:Timestep:endtime
     end
     %Scattering Check
     if Pscat>rand()
-        temp = (normrnd(vx, sqrt(mn/(2*pi*Kbolt*T)))^2 + normrnd(vy, sqrt(mn/(2*pi*Kbolt*T)))^2)^.5;
+        temp = (normrnd(0, sqrt(Kbolt*T/mn)).^2 + normrnd(0, sqrt(Kbolt*T/mn)).^2).^.5;
         x(3,kt) = rand*2*pi;
         x(2,kt) = temp*cos(x(3,kt));
         y(2,kt) = temp*sin(x(3,kt));
@@ -272,7 +274,7 @@ yboxLim2 = [.6*(ylimits(2)-ylimits(1)), ylimits(2)];
 xbox = xboxLim([1 1 2 2 1]);
 ybox1 = yboxLim1([1 2 2 1 1]);
 ybox2 = yboxLim2([1 2 2 1 1]);
-endtime = Timestep*2000;
+endtime = Timestep*5000;
 xprev = zeros(1, NumParticles);
 yprev = zeros(1, NumParticles);
 x = zeros(3,NumParticles);
@@ -302,7 +304,7 @@ while counter <= size(ind,2)
 end
 
 %Assign the random velocity and random angle
-temp(1,:) = (normrnd(vx, sqrt(mn/(Kbolt*T)), 1, NumParticles).^2 + normrnd(vx, sqrt(mn/(Kbolt*T)), 1, NumParticles).^2).^.5;
+temp(1,:) = (normrnd(0, sqrt(mn/(Kbolt*T)), 1, NumParticles).^2 + normrnd(0, sqrt(mn/(Kbolt*T)), 1, NumParticles).^2).^.5;
 x(3,:) = rand(1, NumParticles)*2*pi;
 x(2,:) = temp(1,:).*cos(x(3,:));
 y(2,:) = temp(1,:).*sin(x(3,:));
@@ -344,7 +346,7 @@ for i = 0:Timestep:endtime
                elseif y(1,kt) +  y(2,kt)*Timestep > ylimits(2)
                    x(3,kt) = -rand*pi;
                 end
-        temp = (normrnd(vx, sqrt(mn/(2*pi*Kbolt*T)))^2 + normrnd(vy, sqrt(mn/(2*pi*Kbolt*T)))^2)^.5;
+        temp = (normrnd(0, sqrt(Kbolt*T/mn))^2 + normrnd(0, sqrt(Kbolt*T/mn))^2)^.5;
         x(2,kt) = temp*cos(x(3,kt));
         y(2,kt) = temp*sin(x(3,kt));
            end
@@ -370,7 +372,7 @@ for i = 0:Timestep:endtime
                elseif yinter1
                    x(3,kt) = -rand*pi;
                end
-                      temp = (normrnd(vx, sqrt(mn/(2*pi*Kbolt*T)))^2 + normrnd(vy, sqrt(mn/(2*pi*Kbolt*T)))^2)^.5;
+                      temp = (normrnd(0, sqrt(Kbolt*T/mn))^2 + normrnd(0, sqrt(Kbolt*T/mn))^2)^.5;
         x(2,kt) = temp*cos(x(3,kt));
         y(2,kt) = temp*sin(x(3,kt));
            end
@@ -393,7 +395,7 @@ for i = 0:Timestep:endtime
                elseif yinter1
                    x(3,kt) = -rand*pi;
                end
-        temp = (normrnd(vx, sqrt(mn/(2*pi*Kbolt*T)))^2 + normrnd(vy, sqrt(mn/(2*pi*Kbolt*T)))^2)^.5;
+        temp = (normrnd(0, sqrt(Kbolt*T/mn))^2 + normrnd(0, sqrt(Kbolt*T/mn))^2)^.5;
         x(2,kt) = temp*cos(x(3,kt));
         y(2,kt) = temp*sin(x(3,kt));
            end
@@ -410,7 +412,7 @@ for i = 0:Timestep:endtime
     %Scattering Check
     if Pscat>rand()
         x(3,kt) = rand*2*pi;
-        temp = (normrnd(vx, sqrt(mn/(2*pi*Kbolt*T)))^2 + normrnd(vy, sqrt(mn/(2*pi*Kbolt*T)))^2)^.5;
+        temp = (normrnd(0, sqrt(Kbolt*T/mn))^2 + normrnd(0, sqrt(Kbolt*T/mn))^2)^.5;
         x(2,kt) = temp*cos(x(3,kt));
         y(2,kt) = temp*sin(x(3,kt));
         scatTime(1,kt) = 0;
